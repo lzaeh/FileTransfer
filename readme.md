@@ -16,27 +16,48 @@ FileTransfer 是一个基于局域网的轻量级文件传输工具，用于在�
 
 ## 2. 功能与使用
 ### 💩 1. 支持自定义端口和没什么🥚用的密码：
-![alt text](image-1.png)
-![alt text](image-2.png)
+<p align="center">
+  <img src="pics/image-1.png" alt="端口设置" width="360" />
+  <img src="pics/image-2.png" alt="密码设置" width="360" />
+</p>
+
 ### 💩 2. 关于文件夹
 - 🤡 首先，会默认在你的桌面创建一个 Myfiles 文件夹，如果有的话，就会用那个并且一开始就能显示一些信息。一切上传下载起点在这里，没搞自定义没搞七七八八，就是在桌面的/Myfiles下。
 - 🤡 点击➕加号可以创建文件，可以递归创建。
-    ![alt text](image-3.png)
+<p align="center">
+    <img src="pics/image-3.png" alt="点加号上传" width="360" />
+</p>
     比如创建一个 Test1，就会在你的桌面的 Myfiles 下创建一个 Test1 文件夹，但是是假创建，你真的在这个文件夹里上传了文件才能真创建，否则刷新后 Test1 就没了。
 - 🤡 关于 FolderList部分，它会把你所有的文件夹（包括子文件夹）都一行行列出来，这是失败的设计，没想好，以后要改的。
-    ![alt text](image-4.png)
+<p align="center">
+    <img src="pics/image-4.png" alt="选中文件准备上传" width="360" />
+</p>
+
 ### 💩 3. 关于上传
 - 🤡 在失败设计的 FolderList中，每一行都会表达一个文件夹，你可以选择在这里上传文件（ChooseFiles），可以选多个，也可以给多个文件夹同时选择，然后点击上方的 Upload All，开始上传。
-![alt text](image-5.png)
+<p align="center">
+    <img src="pics/image-5.png" alt="上传文件" width="360" />
+</p>
+
 - 🤡 上传只能给 Myfiles 下的文件夹里上传，Myfiles 下不能上传文件……这GPT给我懵了。
 ### 💩 4. 关于下载
 - 🤡 上面的BrowseRoot点开能够看到丑的批爆的文件结构界面。
-![alt text](image-6.png)
+<p align="center">
+    <img src="pics/image-6.png" alt="下载界面" width="360" />
+</p>
+
 - 🤡 双击文件，可以下载文件。
-![alt text](image-7.png)
+
+<p align="center">
+    <img src="pics/image-7.png" alt="下载文件" width="360" />
+</p>
+
 - 🤡 进入某个文件夹后，点击上方下载这个文件夹绿色按钮，可以下载整个文件夹，以压缩包形式。
 MacOs的Safari这里有点逆天的，会自动解压缩还是什么反正不跟我的逻辑走啊，但是 IOS Safari 以及其他浏览器没这个问题。
-![alt text](<File Transfer.png>)
+<p align="center">
+    <img src="pics/File Transfer.png" alt="下载文件夹" width="360" />
+</p>
+
 ### 💩 5.碎碎念
 🤡 有了上传和下载就满足我的不同 OS 设备之间互传的需求了，这个上传应该做成和下载一套类似逻辑的，这个FolderList太傻逼，最关键的是还是我最开始下意识让AI这样做的，纯逆天好吧。文件夹很多以及有很多子文件夹的情况下，上传时这里就会有一大堆 Lists，并且很难找到你要上传到哪里。
 
