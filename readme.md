@@ -28,6 +28,7 @@ FileTransfer 是一个基于局域网的轻量级文件传输工具，用于在�
     <img src="pics/image-3.png" alt="点加号上传" width="360" />
 </p>
     比如创建一个 Test1，就会在你的桌面的 Myfiles 下创建一个 Test1 文件夹，但是是假创建，你真的在这个文件夹里上传了文件才能真创建，否则刷新后 Test1 就没了。
+    
 - 🤡 关于 FolderList部分，它会把你所有的文件夹（包括子文件夹）都一行行列出来，这是失败的设计，没想好，以后要改的。
 <p align="center">
     <img src="pics/image-4.png" alt="选中文件准备上传" width="360" />
