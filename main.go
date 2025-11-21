@@ -185,7 +185,7 @@ const loginPageTemplate = "" +
 	"</body>\n" +
 	"</html>\n"
 
-// 上传页模板，含 __ROOT__ 和 __ROWS__
+// 主页面模板：只留 Manage 按钮
 const pageTemplate = "" +
 	"<!DOCTYPE html>\n" +
 	"<html>\n" +
@@ -271,22 +271,8 @@ const pageTemplate = "" +
 	"        gap: 6px;\n" +
 	"        white-space: nowrap;\n" +
 	"    }\n" +
-	"    #browseRootBtn {\n" +
-	"        background: linear-gradient(135deg, #0ea5e9, #38bdf8);\n" +
-	"        color: white;\n" +
-	"    }\n" +
-	"    #addFolderBtn {\n" +
-	"        font-size: 18px;\n" +
-	"        width: 40px;\n" +
-	"        height: 40px;\n" +
-	"        border-radius: 50%;\n" +
-	"        border: none;\n" +
-	"        background: #4f46e5;\n" +
-	"        color: white;\n" +
-	"        cursor: pointer;\n" +
-	"    }\n" +
-	"    #uploadAllBtn {\n" +
-	"        background: linear-gradient(135deg, #16a34a, #22c55e);\n" +
+	"    #manageBtn {\n" +
+	"        background: linear-gradient(135deg, #4f46e5, #6366f1);\n" +
 	"        color: white;\n" +
 	"    }\n" +
 	"    .root-card {\n" +
@@ -306,32 +292,14 @@ const pageTemplate = "" +
 	"        font-size: 11px;\n" +
 	"        color: #374151;\n" +
 	"    }\n" +
-	"    .section-title {\n" +
-	"        margin-top: 0;\n" +
-	"        margin-bottom: 8px;\n" +
-	"        font-size: 13px;\n" +
-	"        text-transform: uppercase;\n" +
-	"        letter-spacing: 0.06em;\n" +
-	"        color: #6b7280;\n" +
-	"    }\n" +
-	"    .folder-wrapper {\n" +
-	"        background: #eef1ff;\n" +
+	"    .hint-card {\n" +
+	"        padding: 14px;\n" +
 	"        border-radius: 12px;\n" +
-	"        padding: 0;\n" +
-	"        max-height: 60vh;\n" +
-	"        min-height: 40vh;\n" +
-	"        display: flex;\n" +
-	"        flex-direction: column;\n" +
-	"        overflow: hidden;\n" +
-	"        border: 1px solid #e5e7eb;\n" +
-	"    }\n" +
-	"    #folderContainer {\n" +
-	"        padding: 12px;\n" +
-	"        overflow-y: auto;\n" +
-	"        flex: 1 1 auto;\n" +
-	"    }\n" +
-	"    .folder-row {\n" +
-	"        border-radius: 8px;\n" +
+	"        background: #eef1ff;\n" +
+	"        border: 1px dashed #c7d2fe;\n" +
+	"        font-size: 13px;\n" +
+	"        color: #374151;\n" +
+	"        line-height: 1.6;\n" +
 	"    }\n" +
 	"    @media (max-width: 600px) {\n" +
 	"        .shell-card { margin-top: 12px; padding: 12px; border-radius: 14px; }\n" +
@@ -351,19 +319,15 @@ const pageTemplate = "" +
 	"              <div class=\"title-text-sub\">用chatGPT弄出来的简单局域网传输工具。</div>\n" +
 	"              <div class=\"chip-row\">\n" +
 	"                <div class=\"chip\">Root: Myfiles</div>\n" +
-	"                <div class=\"chip\">Multi-folder upload</div>\n" +
+	"                <div class=\"chip\">Browser upload</div>\n" +
 	"                <div class=\"chip\">ZIP download</div>\n" +
 	"              </div>\n" +
 	"            </div>\n" +
 	"        </div>\n" +
 	"        <div style=\"display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end;\">\n" +
-	"            <button id=\"browseRootBtn\" class=\"btn-pill\">\n" +
-	"              <span>Browse Root</span>\n" +
+	"            <button id=\"manageBtn\" class=\"btn-pill\">\n" +
+	"              <span>Manage</span>\n" +
 	"            </button>\n" +
-	"            <button id=\"uploadAllBtn\" class=\"btn-pill\">\n" +
-	"              <span>Upload All</span>\n" +
-	"            </button>\n" +
-	"            <button id=\"addFolderBtn\">+</button>\n" +
 	"        </div>\n" +
 	"    </div>\n" +
 	"\n" +
@@ -372,178 +336,74 @@ const pageTemplate = "" +
 	"        <div class=\"root-path\">__ROOT__</div>\n" +
 	"    </div>\n" +
 	"\n" +
-	"    <h3 class=\"section-title\">Folder list (inside fromMacBookProM3)</h3>\n" +
-	"    <div class=\"folder-wrapper\">\n" +
-	"      <div id=\"folderContainer\" data-root=\"__ROOT__\">\n" +
-	"        __ROWS__\n" +
-	"      </div>\n" +
+	"    <div class=\"hint-card\">\n" +
+	"      点 <b>Manage</b> 打开文件浏览器：\n" +
+	"      <ul style=\"margin:8px 0 0 18px; padding:0;\">\n" +
+	"        <li>点击文件 = 下载；双击文件夹 = 进入；绿色按钮 = 打包当前文件夹 ZIP 下载。</li>\n" +
+	"        <li>New(+) = 在当前目录新建文件夹/文件；Upload(⇪) = 上传文件到当前目录。</li>\n" +
+	"      </ul>\n" +
 	"    </div>\n" +
 	"  </div>\n" +
 	"\n" +
-	"    <div id=\"fsModal\" style=\"display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999;\">\n" +
-	"      <div style=\"background:#ffffff; max-width:800px; margin:40px auto; padding:16px; border-radius:12px; max-height:80vh; overflow:auto; box-shadow:0 18px 45px rgba(15,23,42,0.3);\">\n" +
-	"        <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; flex-wrap:wrap;\">\n" +
-	"          <div>\n" +
-	"            <div style=\"font-weight:600;\">File Browser</div>\n" +
-	"            <div id=\"fsPath\" style=\"font-size:12px; color:#6b7280; word-break:break-all;\"></div>\n" +
-	"          </div>\n" +
-	"          <div style=\"display:flex; gap:8px; flex-wrap:wrap;\">\n" +
-	"            <button id=\"fsUpBtn\" style=\"padding:6px 10px; border-radius:999px; border:none; background:#e5e7eb; color:#111827; font-size:12px; cursor:pointer;\">Up</button>\n" +
-	"            <a id=\"fsZipLink\" href=\"#\" style=\"padding:6px 10px; border-radius:999px; background:#16a34a; color:white; font-size:12px; text-decoration:none;\">Download this folder</a>\n" +
-	"            <button id=\"fsCloseBtn\" style=\"padding:6px 10px; border-radius:999px; border:none; background:#9ca3af; color:white; font-size:12px; cursor:pointer;\">Close</button>\n" +
-	"          </div>\n" +
+	"  <div id=\"fsModal\" style=\"display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:9999;\">\n" +
+	"    <div style=\"background:#ffffff; max-width:820px; margin:40px auto; padding:16px; border-radius:12px; max-height:80vh; overflow:auto; box-shadow:0 18px 45px rgba(15,23,42,0.3);\">\n" +
+	"      <div style=\"display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; gap:8px; flex-wrap:wrap;\">\n" +
+	"        <div>\n" +
+	"          <div style=\"font-weight:600;\">File Browser</div>\n" +
+	"          <div id=\"fsPath\" style=\"font-size:12px; color:#6b7280; word-break:break-all;\"></div>\n" +
 	"        </div>\n" +
-	"        <div id=\"fsSelection\" style=\"margin-bottom:6px; font-size:12px; color:#6b7280;\">No item selected. Click a file or folder to select.</div>\n" +
-	"        <ul id=\"fsList\" style=\"list-style:none; padding-left:0; margin:0;\"></ul>\n" +
+	"        <div style=\"display:flex; gap:8px; flex-wrap:wrap; align-items:center;\">\n" +
+	"          <button id=\"fsNewBtn\" title=\"New folder or file\" style=\"padding:6px 10px; border-radius:999px; border:none; background:#4f46e5; color:white; font-size:12px; cursor:pointer;\">New +</button>\n" +
+	"          <button id=\"fsUploadBtn\" title=\"Upload to this folder\" style=\"padding:6px 10px; border-radius:999px; border:none; background:#0ea5e9; color:white; font-size:12px; cursor:pointer;\">Upload ⇪</button>\n" +
+	"          <input id=\"fsUploadInput\" type=\"file\" multiple style=\"display:none;\" />\n" +
+	"          <button id=\"fsUpBtn\" style=\"padding:6px 10px; border-radius:999px; border:none; background:#e5e7eb; color:#111827; font-size:12px; cursor:pointer;\">Up</button>\n" +
+	"          <a id=\"fsZipLink\" href=\"#\" style=\"padding:6px 10px; border-radius:999px; background:#16a34a; color:white; font-size:12px; text-decoration:none;\">Download this folder</a>\n" +
+	"          <button id=\"fsCloseBtn\" style=\"padding:6px 10px; border-radius:999px; border:none; background:#9ca3af; color:white; font-size:12px; cursor:pointer;\">Close</button>\n" +
+	"        </div>\n" +
 	"      </div>\n" +
+	"\n" +
+	"      <div id=\"fsUploadPanel\" style=\"display:none; padding:8px 10px; border-radius:10px; background:#f8fafc; border:1px solid #e5e7eb; margin-bottom:8px;\">\n" +
+	"        <div style=\"display:flex; gap:12px; font-size:12px; color:#374151; flex-wrap:wrap; align-items:center; margin-bottom:6px;\">\n" +
+	"          <span>Progress: <span id=\"fsUploadPercent\">0</span>%</span>\n" +
+	"          <span>Speed: <span id=\"fsUploadSpeed\">0 MB/s</span></span>\n" +
+	"        </div>\n" +
+	"        <progress id=\"fsUploadProg\" value=\"0\" max=\"100\" style=\"width:100%;\"></progress>\n" +
+	"        <pre id=\"fsUploadResult\" style=\"margin:6px 0 0; font-size:12px; white-space:pre-wrap;\"></pre>\n" +
+	"      </div>\n" +
+	"\n" +
+	"      <div id=\"fsSelection\" style=\"margin-bottom:6px; font-size:12px; color:#6b7280;\">No item selected. Click a file or folder to select.</div>\n" +
+	"      <ul id=\"fsList\" style=\"list-style:none; padding-left:0; margin:0;\"></ul>\n" +
 	"    </div>\n" +
+	"  </div>\n" +
 	"\n" +
 	"<script>\n" +
-	"var folderContainer = document.getElementById('folderContainer');\n" +
-	"var rootPath = folderContainer.getAttribute('data-root');\n" +
-	"\n" +
 	"var fsModal = document.getElementById('fsModal');\n" +
 	"var fsList = document.getElementById('fsList');\n" +
 	"var fsPath = document.getElementById('fsPath');\n" +
 	"var fsZipLink = document.getElementById('fsZipLink');\n" +
 	"var fsUpBtn = document.getElementById('fsUpBtn');\n" +
+	"var fsCloseBtn = document.getElementById('fsCloseBtn');\n" +
+	"var fsNewBtn = document.getElementById('fsNewBtn');\n" +
+	"var fsUploadBtn = document.getElementById('fsUploadBtn');\n" +
+	"var fsUploadInput = document.getElementById('fsUploadInput');\n" +
 	"var fsSelection = document.getElementById('fsSelection');\n" +
+	"var fsUploadPanel = document.getElementById('fsUploadPanel');\n" +
+	"var fsUploadProg = document.getElementById('fsUploadProg');\n" +
+	"var fsUploadPercent = document.getElementById('fsUploadPercent');\n" +
+	"var fsUploadSpeed = document.getElementById('fsUploadSpeed');\n" +
+	"var fsUploadResult = document.getElementById('fsUploadResult');\n" +
+	"\n" +
 	"var currentFsDir = '';\n" +
 	"var selectedItemPath = '';\n" +
 	"var selectedItemType = '';\n" +
 	"var selectedLi = null;\n" +
-	"\n" +
-	"function uploadRow(row) {\n" +
-	"    var folder = row.getAttribute('data-folder');\n" +
-	"    var fileInput = row.querySelector('.file-input');\n" +
-	"    var progressBar = row.querySelector('.progress-bar');\n" +
-	"    var percentEl = row.querySelector('.percent');\n" +
-	"    var speedEl = row.querySelector('.speed');\n" +
-	"    var resultEl = row.querySelector('.result');\n" +
-	"\n" +
-	"    var files = fileInput.files;\n" +
-	"    if (!files || files.length === 0) {\n" +
-	"        return;\n" +
-	"    }\n" +
-	"\n" +
-	"    var formData = new FormData();\n" +
-	"    for (var i = 0; i < files.length; i++) {\n" +
-	"        formData.append('files', files[i]);\n" +
-	"    }\n" +
-	"    formData.append('target', folder);\n" +
-	"\n" +
-	"    var xhr = new XMLHttpRequest();\n" +
-	"    xhr.open('POST', '/upload', true);\n" +
-	"\n" +
-	"    var startTime = Date.now();\n" +
-	"\n" +
-	"    xhr.upload.onprogress = function(e) {\n" +
-	"        if (e.lengthComputable) {\n" +
-	"            var percent = e.loaded / e.total * 100;\n" +
-	"            progressBar.value = percent;\n" +
-	"            percentEl.textContent = percent.toFixed(1);\n" +
-	"\n" +
-	"            var elapsedSec = (Date.now() - startTime) / 1000;\n" +
-	"            if (elapsedSec > 0) {\n" +
-	"                var bytesPerSec = e.loaded / elapsedSec;\n" +
-	"                var mbPerSec = bytesPerSec / (1024 * 1024);\n" +
-	"                speedEl.textContent = mbPerSec.toFixed(2) + ' MB/s';\n" +
-	"            }\n" +
-	"        }\n" +
-	"    };\n" +
-	"\n" +
-	"    xhr.onload = function() {\n" +
-	"        if (xhr.status === 200) {\n" +
-	"            resultEl.textContent = xhr.responseText;\n" +
-	"        } else {\n" +
-	"            resultEl.textContent = 'Upload failed: ' + xhr.status + ' ' + xhr.statusText;\n" +
-	"        }\n" +
-	"    };\n" +
-	"\n" +
-	"    xhr.onerror = function() {\n" +
-	"        resultEl.textContent = 'Upload error (network or server issue)';\n" +
-	"    };\n" +
-	"\n" +
-	"    progressBar.value = 0;\n" +
-	"    percentEl.textContent = '0';\n" +
-	"    speedEl.textContent = '0 MB/s';\n" +
-	"    resultEl.textContent = 'Uploading...';\n" +
-	"\n" +
-	"    xhr.send(formData);\n" +
-	"}\n" +
-	"\n" +
-	"function createFolderRow(name) {\n" +
-	"    var row = document.createElement('div');\n" +
-	"    row.className = 'folder-row';\n" +
-	"    row.setAttribute('data-folder', name);\n" +
-	"\n" +
-	"    var bg = '#f0f4ff';\n" +
-	"    var displayPath = rootPath + '/' + name;\n" +
-	"\n" +
-	"    row.style.display = 'flex';\n" +
-	"    row.style.flexDirection = 'column';\n" +
-	"    row.style.gap = '6px';\n" +
-	"    row.style.padding = '10px';\n" +
-	"    row.style.marginBottom = '10px';\n" +
-	"    row.style.borderRadius = '8px';\n" +
-	"    row.style.background = bg;\n" +
-	"\n" +
-	"    row.innerHTML = '' +\n" +
-	"        '<div style=\"display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;\">' +\n" +
-	"            '<div style=\"font-weight: 600;\">[Folder] ' + name + '</div>' +\n" +
-	"            '<div>' +\n" +
-	"                '<input type=\"file\" class=\"file-input\" multiple style=\"max-width: 100%;\" />' +\n" +
-	"            '</div>' +\n" +
-	"        '</div>' +\n" +
-	"        '<div style=\"font-size: 12px; color: #555; word-break: break-all;\">' +\n" +
-	"            'Target path: ' + displayPath +\n" +
-	"        '</div>' +\n" +
-	"        '<div style=\"display: flex; align-items: center; gap: 10px; font-size: 12px; flex-wrap: wrap;\">' +\n" +
-	"            '<span>Progress: <span class=\"percent\">0</span></span>' +\n" +
-	"            '<span>Speed: <span class=\"speed\">0 MB/s</span></span>' +\n" +
-	"        '</div>' +\n" +
-	"        '<progress class=\"progress-bar\" value=\"0\" max=\"100\" style=\"width: 100%;\"></progress>' +\n" +
-	"        '<pre class=\"result\" style=\"margin: 0; background: transparent; padding: 0; font-size: 12px; white-space: pre-wrap;\"></pre>';\n" +
-	"\n" +
-	"    folderContainer.appendChild(row);\n" +
-	"}\n" +
-	"\n" +
-	"document.getElementById('uploadAllBtn').addEventListener('click', function() {\n" +
-	"    var rows = document.querySelectorAll('.folder-row');\n" +
-	"    var hasAny = false;\n" +
-	"    for (var i = 0; i < rows.length; i++) {\n" +
-	"        var fileInput = rows[i].querySelector('.file-input');\n" +
-	"        if (fileInput && fileInput.files && fileInput.files.length > 0) {\n" +
-	"            hasAny = true;\n" +
-	"            uploadRow(rows[i]);\n" +
-	"        }\n" +
-	"    }\n" +
-	"    if (!hasAny) {\n" +
-	"        alert('No files selected in any folder');\n" +
-	"    }\n" +
-	"});\n" +
-	"\n" +
-	"document.getElementById('addFolderBtn').addEventListener('click', function() {\n" +
-	"    var name = window.prompt(\"New folder relative path (e.g. 'foo' or 'foo/bar'):\");\n" +
-	"    if (!name) return;\n" +
-	"    var trimmed = name.trim();\n" +
-	"    if (!trimmed) return;\n" +
-	"    if (trimmed.indexOf('..') !== -1) {\n" +
-	"        alert('Path cannot contain ..');\n" +
-	"        return;\n" +
-	"    }\n" +
-	"    createFolderRow(trimmed);\n" +
-	"});\n" +
 	"\n" +
 	"function openBrowserForFolder(rel) {\n" +
 	"  currentFsDir = rel || '';\n" +
 	"  fsModal.style.display = 'block';\n" +
 	"  loadFsDir(currentFsDir);\n" +
 	"}\n" +
-	"\n" +
-	"function closeFsModal() {\n" +
-	"  fsModal.style.display = 'none';\n" +
-	"}\n" +
+	"function closeFsModal() { fsModal.style.display = 'none'; }\n" +
 	"\n" +
 	"function updateUpButtonState() {\n" +
 	"  if (!fsUpBtn) return;\n" +
@@ -585,7 +445,6 @@ const pageTemplate = "" +
 	"}\n" +
 	"\n" +
 	"function onItemClick(li, entry) {\n" +
-	"  // 第二次点击同一个条目\n" +
 	"  if (selectedItemPath && selectedItemPath === entry.relPath) {\n" +
 	"    if (entry.isDir) {\n" +
 	"      openBrowserForFolder(entry.relPath);\n" +
@@ -594,8 +453,6 @@ const pageTemplate = "" +
 	"    }\n" +
 	"    return;\n" +
 	"  }\n" +
-	"\n" +
-	"  // 第一次点击：选中高亮\n" +
 	"  if (selectedLi) {\n" +
 	"    selectedLi.style.boxShadow = '';\n" +
 	"    selectedLi.style.backgroundColor = '';\n" +
@@ -678,30 +535,104 @@ const pageTemplate = "" +
 	"  });\n" +
 	"}\n" +
 	"\n" +
-	"document.getElementById('fsCloseBtn').addEventListener('click', function() {\n" +
-	"  closeFsModal();\n" +
-	"});\n" +
+	"function showUploadPanel() { fsUploadPanel.style.display = 'block'; }\n" +
+	"function resetUploadPanel() {\n" +
+	"  fsUploadProg.value = 0;\n" +
+	"  fsUploadPercent.textContent = '0';\n" +
+	"  fsUploadSpeed.textContent = '0 MB/s';\n" +
+	"  fsUploadResult.textContent = '';\n" +
+	"}\n" +
 	"\n" +
-	"fsModal.addEventListener('click', function(e) {\n" +
-	"  if (e.target === fsModal) { closeFsModal(); }\n" +
-	"});\n" +
+	"function uploadToCurrentDir(files) {\n" +
+	"  if (!files || files.length === 0) return;\n" +
+	"  showUploadPanel();\n" +
+	"  resetUploadPanel();\n" +
 	"\n" +
-	"if (fsUpBtn) {\n" +
-	"  fsUpBtn.addEventListener('click', function() {\n" +
-	"    if (!currentFsDir || currentFsDir === '') return;\n" +
-	"    var parts = currentFsDir.split('/');\n" +
-	"    parts.pop();\n" +
-	"    var parent = parts.join('/');\n" +
-	"    openBrowserForFolder(parent);\n" +
+	"  var formData = new FormData();\n" +
+	"  for (var i = 0; i < files.length; i++) {\n" +
+	"    formData.append('files', files[i]);\n" +
+	"  }\n" +
+	"  formData.append('target', currentFsDir);\n" +
+	"\n" +
+	"  var xhr = new XMLHttpRequest();\n" +
+	"  xhr.open('POST', '/upload', true);\n" +
+	"  var startTime = Date.now();\n" +
+	"\n" +
+	"  xhr.upload.onprogress = function(e) {\n" +
+	"    if (!e.lengthComputable) return;\n" +
+	"    var percent = e.loaded / e.total * 100;\n" +
+	"    fsUploadProg.value = percent;\n" +
+	"    fsUploadPercent.textContent = percent.toFixed(1);\n" +
+	"    var elapsedSec = (Date.now() - startTime) / 1000;\n" +
+	"    if (elapsedSec > 0) {\n" +
+	"      var bytesPerSec = e.loaded / elapsedSec;\n" +
+	"      var mbPerSec = bytesPerSec / (1024 * 1024);\n" +
+	"      fsUploadSpeed.textContent = mbPerSec.toFixed(2) + ' MB/s';\n" +
+	"    }\n" +
+	"  };\n" +
+	"\n" +
+	"  xhr.onload = function() {\n" +
+	"    if (xhr.status === 200) {\n" +
+	"      fsUploadResult.textContent = xhr.responseText;\n" +
+	"      loadFsDir(currentFsDir);\n" +
+	"    } else {\n" +
+	"      fsUploadResult.textContent = 'Upload failed: ' + xhr.status + ' ' + xhr.statusText + '\\n' + xhr.responseText;\n" +
+	"    }\n" +
+	"  };\n" +
+	"  xhr.onerror = function() { fsUploadResult.textContent = 'Upload error (network or server issue)'; };\n" +
+	"\n" +
+	"  xhr.send(formData);\n" +
+	"}\n" +
+	"\n" +
+	"function looksLikeFile(name) {\n" +
+	"  var base = name.split('/').pop();\n" +
+	"  if (!base) return false;\n" +
+	"  var dot = base.lastIndexOf('.');\n" +
+	"  return dot > 0 && dot < base.length - 1;\n" +
+	"}\n" +
+	"\n" +
+	"function createItemInCurrentDir() {\n" +
+	"  var name = window.prompt(\"New folder or file name (e.g. 'foo' or 'a.txt'):\");\n" +
+	"  if (!name) return;\n" +
+	"  name = name.trim();\n" +
+	"  if (!name) return;\n" +
+	"  if (name.indexOf('..') !== -1 || name.startsWith('/')) { alert('Invalid name'); return; }\n" +
+	"  var isFile = looksLikeFile(name);\n" +
+	"  var relPath = currentFsDir ? (currentFsDir + '/' + name) : name;\n" +
+	"\n" +
+	"  fetch('/api/create', {\n" +
+	"    method: 'POST',\n" +
+	"    headers: { 'Content-Type': 'application/json' },\n" +
+	"    body: JSON.stringify({ path: relPath, isDir: !isFile })\n" +
+	"  }).then(function(resp) {\n" +
+	"    if (!resp.ok) return resp.text().then(t => { throw new Error(t || ('HTTP ' + resp.status)); });\n" +
+	"    return resp.text();\n" +
+	"  }).then(function(msg) {\n" +
+	"    showUploadPanel();\n" +
+	"    fsUploadResult.textContent = msg;\n" +
+	"    loadFsDir(currentFsDir);\n" +
+	"  }).catch(function(err) { alert('Create failed: ' + err); });\n" +
+	"}\n" +
+	"\n" +
+	"if (fsNewBtn) fsNewBtn.addEventListener('click', function() { createItemInCurrentDir(); });\n" +
+	"if (fsUploadBtn && fsUploadInput) {\n" +
+	"  fsUploadBtn.addEventListener('click', function() { fsUploadInput.click(); });\n" +
+	"  fsUploadInput.addEventListener('change', function() {\n" +
+	"    uploadToCurrentDir(fsUploadInput.files);\n" +
+	"    fsUploadInput.value = '';\n" +
 	"  });\n" +
 	"}\n" +
 	"\n" +
-	"var browseRootBtn = document.getElementById('browseRootBtn');\n" +
-	"if (browseRootBtn) {\n" +
-	"  browseRootBtn.addEventListener('click', function() {\n" +
-	"    openBrowserForFolder('');\n" +
-	"  });\n" +
-	"}\n" +
+	"if (fsCloseBtn) fsCloseBtn.addEventListener('click', function() { closeFsModal(); });\n" +
+	"fsModal.addEventListener('click', function(e) { if (e.target === fsModal) closeFsModal(); });\n" +
+	"if (fsUpBtn) fsUpBtn.addEventListener('click', function() {\n" +
+	"  if (!currentFsDir || currentFsDir === '') return;\n" +
+	"  var parts = currentFsDir.split('/'); parts.pop();\n" +
+	"  openBrowserForFolder(parts.join('/'));\n" +
+	"});\n" +
+	"\n" +
+	"var manageBtn = document.getElementById('manageBtn');\n" +
+	"if (manageBtn) manageBtn.addEventListener('click', function() { openBrowserForFolder(''); });\n" +
 	"</script>\n" +
 	"</body>\n" +
 	"</html>\n"
@@ -749,6 +680,11 @@ type listResponse struct {
 	Entries     []listEntry `json:"entries"`
 }
 
+type createRequest struct {
+	Path  string `json:"path"`  // relative to root
+	IsDir bool   `json:"isDir"` // true=folder, false=file
+}
+
 func main() {
 	desktop := getDesktop()
 	root := filepath.Join(desktop, "Myfiles")
@@ -757,83 +693,18 @@ func main() {
 	reader := bufio.NewReader(os.Stdin)
 	port := choosePort(reader)
 	authPassword = choosePassword(reader)
-	serverToken = generateServerToken() // 每次启动生成新的 token，旧 cookie 全失效
+	serverToken = generateServerToken()
 
-	// 根路径：未登录 -> 登录页；已登录 -> 上传页
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if !isAuthed(r) {
 			renderLogin(w, false)
 			return
 		}
-
-		var folders []string
-		filepath.WalkDir(root, func(path string, d fs.DirEntry, err error) error {
-			if err != nil {
-				return nil
-			}
-			if !d.IsDir() {
-				return nil
-			}
-			rel, err := filepath.Rel(root, path)
-			if err != nil {
-				return nil
-			}
-			if rel == "." {
-				return nil
-			}
-			rel = filepath.ToSlash(rel)
-			folders = append(folders, rel)
-			return nil
-		})
-
-		rowsHTML := ""
-		if len(folders) == 0 {
-			rowsHTML = "" +
-				"<div style=\"padding: 20px; color: #777; font-size: 13px;\">" +
-				"No folders yet. Click \"+\" to add a row (e.g. 'foo' or 'foo/bar'), then upload to create it." +
-				"</div>"
-		} else {
-			for i, rel := range folders {
-				escName := html.EscapeString(rel)
-				bg := "#f0f4ff"
-				if i%2 == 1 {
-					bg = "#f7f7ff"
-				}
-				row := fmt.Sprintf(
-					"<div class=\"folder-row\" data-folder=\"%s\" style=\"display: flex; flex-direction: column; gap: 6px; padding: 10px; margin-bottom: 10px; border-radius: 8px; background: %s;\">"+
-						"<div style=\"display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;\">"+
-						"<div style=\"font-weight: 600;\">[Folder] %s</div>"+
-						"<div>"+
-						"<input type=\"file\" class=\"file-input\" multiple style=\"max-width: 100%%;\" />"+
-						"</div>"+
-						"</div>"+
-						"<div style=\"font-size: 12px; color: #555; word-break: break-all;\">"+
-						"Target path: %s"+
-						"</div>"+
-						"<div style=\"display: flex; align-items: center; gap: 10px; font-size: 12px; flex-wrap: wrap;\">"+
-						"<span>Progress: <span class=\"percent\">0</span></span>"+
-						"<span>Speed: <span class=\"speed\">0 MB/s</span></span>"+
-						"</div>"+
-						"<progress class=\"progress-bar\" value=\"0\" max=\"100\" style=\"width: 100%%;\"></progress>"+
-						"<pre class=\"result\" style=\"margin: 0; background: transparent; padding: 0; font-size: 12px; white-space: pre-wrap;\"></pre>"+
-						"</div>",
-					escName,
-					bg,
-					escName,
-					html.EscapeString(filepath.Join(root, rel)),
-				)
-				rowsHTML += row
-			}
-		}
-
 		page := strings.ReplaceAll(pageTemplate, "__ROOT__", html.EscapeString(root))
-		page = strings.Replace(page, "__ROWS__", rowsHTML, 1)
-
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		_, _ = w.Write([]byte(page))
 	})
 
-	// 登录
 	http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodPost {
 			renderLogin(w, false)
@@ -852,14 +723,66 @@ func main() {
 		renderLogin(w, true)
 	})
 
-	// 上传：需要已登录
+	http.HandleFunc("/api/create", func(w http.ResponseWriter, r *http.Request) {
+		if !isAuthed(r) {
+			http.Error(w, "unauthorized", http.StatusUnauthorized)
+			return
+		}
+		if r.Method != http.MethodPost {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+		var req createRequest
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "bad json", http.StatusBadRequest)
+			return
+		}
+		req.Path = strings.TrimSpace(req.Path)
+		if req.Path == "" {
+			http.Error(w, "empty path", http.StatusBadRequest)
+			return
+		}
+		full, err := joinSafe(root, req.Path)
+		if err != nil {
+			http.Error(w, "invalid path", http.StatusBadRequest)
+			return
+		}
+
+		if req.IsDir {
+			if err := os.MkdirAll(full, 0755); err != nil {
+				http.Error(w, "mkdir failed: "+err.Error(), http.StatusInternalServerError)
+				return
+			}
+			w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+			fmt.Fprintf(w, "OK: created folder -> %s", full)
+			return
+		}
+
+		parent := filepath.Dir(full)
+		if err := os.MkdirAll(parent, 0755); err != nil {
+			http.Error(w, "ensure parent failed: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		if _, err := os.Stat(full); err == nil {
+			http.Error(w, "file already exists", http.StatusConflict)
+			return
+		}
+		f, err := os.Create(full)
+		if err != nil {
+			http.Error(w, "create file failed: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
+		_ = f.Close()
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		fmt.Fprintf(w, "OK: created file -> %s", full)
+	})
+
 	http.HandleFunc("/upload", func(w http.ResponseWriter, r *http.Request) {
 		if !isAuthed(r) {
 			http.Error(w, "unauthorized", http.StatusUnauthorized)
 			return
 		}
-
-		if err := r.ParseMultipartForm(32 << 20); err != nil {
+		if err := r.ParseMultipartForm(64 << 20); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -870,7 +793,6 @@ func main() {
 			http.Error(w, "invalid target dir", http.StatusBadRequest)
 			return
 		}
-
 		if err := os.MkdirAll(fullDir, 0755); err != nil {
 			http.Error(w, "failed to ensure target dir: "+err.Error(), http.StatusInternalServerError)
 			return
@@ -892,8 +814,7 @@ func main() {
 				fmt.Fprintf(w, "FAILED: %s (%v)\n", header.Filename, err)
 				continue
 			}
-
-			dstPath := filepath.Join(fullDir, header.Filename)
+			dstPath := filepath.Join(fullDir, filepath.Base(header.Filename))
 			dst, err := os.Create(dstPath)
 			if err != nil {
 				fmt.Fprintf(w, "FAILED: %s (%v)\n", header.Filename, err)
@@ -909,12 +830,10 @@ func main() {
 				fmt.Fprintf(w, "FAILED: %s (%v)\n", header.Filename, err)
 				continue
 			}
-
 			fmt.Fprintf(w, "OK: %s -> %s\n", header.Filename, dstPath)
 		}
 	})
 
-	// JSON 列目录（给前端文件系统窗口用）
 	http.HandleFunc("/api/list", func(w http.ResponseWriter, r *http.Request) {
 		if !isAuthed(r) {
 			http.Error(w, "unauthorized", http.StatusUnauthorized)
@@ -970,7 +889,6 @@ func main() {
 		_ = json.NewEncoder(w).Encode(resp)
 	})
 
-	// 下载单个文件
 	http.HandleFunc("/download", func(w http.ResponseWriter, r *http.Request) {
 		if !isAuthed(r) {
 			http.Error(w, "unauthorized", http.StatusUnauthorized)
@@ -999,7 +917,6 @@ func main() {
 		http.ServeFile(w, r, full)
 	})
 
-	// 下载整个文件夹为 zip
 	http.HandleFunc("/download-zip", func(w http.ResponseWriter, r *http.Request) {
 		if !isAuthed(r) {
 			http.Error(w, "unauthorized", http.StatusUnauthorized)
@@ -1050,8 +967,8 @@ func main() {
 			if err != nil {
 				return nil
 			}
-			defer f.Close()
 			_, _ = io.Copy(fw, f)
+			_ = f.Close()
 			return nil
 		})
 	})
